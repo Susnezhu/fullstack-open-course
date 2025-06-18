@@ -1,10 +1,10 @@
-# Uuden muistiinpanon luominen
+# Uuden muistiinpanon luominen (SPA)
 
 ```mermaid
 sequenceDiagram
     participant Käyttäjä
     participant Selain as Selain (selain)
-    participant Palvelin as Palvelin (server)
+    participant Palvelin as Palvelin (API)
 
     Käyttäjä->>Selain: avaa sivuston
 
@@ -14,11 +14,11 @@ sequenceDiagram
 
     Käyttäjä->>Selain: kirjoittaa tekstin ja painaa "Send"
 
-    Selain->>Palvelin: lähettää tiedot palvelimelle (POST /new_note)
+    Selain->>Palvelin: lähettää tiedot palvelimelle (POST /api/notes)
     activate Palvelin
     %% Palvelin lisää tiedot muistiinpanoihin
-    Palvelin-->>Selain: lähettää uuden html (200 OK)
+    Palvelin-->>Selain: palauttaa JSON-vastaus: {"message":"note created"} (201 Created)
     deactivate Palvelin
 
-    Selain->>Käyttäjä: näyttää uusi muistiinpano
+    Selain->>Käyttäjä: päivittää näkymän ja lisää uusi muistiinpano DOMiin
 ```
