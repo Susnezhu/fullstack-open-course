@@ -5,6 +5,55 @@ const Button = (props) => (
   <button onClick={props.onClick}>{props.text}</button>
 )
 
+const Sum = (props) => {
+  let summary = props.a + props.b + props.c;
+
+  return (
+    <div>
+      <p>All: {summary}</p>
+    </div>
+  );
+};
+
+const Average = (props) => {
+  const a = props.a;
+  const b = props.b;
+  const c = props.c;
+
+  let summary = a + b + c;
+
+  if (summary === 0) {
+    return <p>Average: 0</p>;
+  }
+
+  let average = (a * 1 + b * 0 + c * (-1)) / summary
+
+  return (
+    <div>
+      <p>Average: {average}</p>
+    </div>
+  )
+}
+
+const Positive = (props) => {
+  const a = props.a;
+  const b = props.b;
+  const c = props.c;
+
+  let summary = a + b + c;
+  let prosent = (a / summary) * 100;
+
+  if (summary === 0) {
+    return <p>Positive: 0 %</p>;
+  }
+
+    return (
+        <div>
+            <p>Positive: {prosent} %</p>
+        </div>
+    )
+}
+
 const Task2 = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
@@ -23,6 +72,12 @@ const Task2 = () => {
       <p>Good: {good}</p>
       <p>Neutral: {neutral}</p>
       <p>Bad: {bad}</p>
+
+      <br />
+
+      <Sum a={good} b={neutral} c={bad} />
+      <Average a={good} b={neutral} c={bad}/>
+      <Positive a={good} b={neutral} c={bad}/>
 
     </div>
   );
