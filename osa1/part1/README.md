@@ -1,12 +1,7 @@
-# React + Vite
+# Kaikki osan 1 tehtävät samalla sivulla
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Päätin olla tekemättä uutta HTML-tiedostoa tai luomatta jokaista pientä tehtävää varten uutta isoa kansiorakennetta.
 
-Currently, two official plugins are available:
+Kaikki tehtävät on lisätty samalle sivustolle, mikä mahdollistaa niiden katselun yhtä aikaa.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Jokaisella tehtävällä on kuitenkin oma JSX-tiedosto, joka tuodaan (import) App.jsx tiedostoon.
