@@ -26,8 +26,8 @@ const Content = (props) => {
 
 const Total = (props) => {
   let total = 0;
-  for (let i = 0; i < props.exercises.length; i++) {
-    total += props.exercises[i];
+  for (let i = 0; i < props.parts.length; i++) {
+    total += props.parts[i].exercises;
   }
 
   return (
@@ -60,13 +60,9 @@ const App = () => {
     <div>
       <Header course={course} />
 
-      <Content parts={[
-        {name: parts[0].name, exercises: parts[0].exercises},
-        {name: parts[1].name, exercises: parts[1].exercises},
-        {name: parts[2].name, exercises: parts[2].exercises}
-      ]} />
+      <Content parts={parts} />
 
-      <Total exercises={[parts[0].exercises,parts[1].exercises,parts[2].exercises]}/>
+      <Total parts={parts} />
     </div>
   )
 }
