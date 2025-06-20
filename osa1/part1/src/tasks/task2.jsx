@@ -9,9 +9,7 @@ const Sum = (props) => {
   let summary = props.a + props.b + props.c;
 
   return (
-    <div>
-      <p>All: {summary}</p>
-    </div>
+    summary
   );
 };
 
@@ -23,15 +21,13 @@ const Average = (props) => {
   let summary = a + b + c;
 
   if (summary === 0) {
-    return <p>Average: 0</p>;
+    return 0;
   }
 
   let average = (a * 1 + b * 0 + c * (-1)) / summary
 
   return (
-    <div>
-      <p>Average: {average}</p>
-    </div>
+    average
   )
 }
 
@@ -44,24 +40,22 @@ const Positive = (props) => {
   let prosent = (a / summary) * 100;
 
   if (summary === 0) {
-    return <p>Positive: 0 %</p>;
+    return "0%"
   }
 
     return (
-        <div>
-            <p>Positive: {prosent} %</p>
-        </div>
+        prosent + "%"
     )
 }
 
 const StatisticLine = (props) => {
 
   return (
-    <div>
-      <p>{props.text}: {props.value}</p>
-    </div>
-  )
-    
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value}</td>
+    </tr>
+  );
 }
 
 const Statistics = (props) => {
@@ -70,20 +64,18 @@ const Statistics = (props) => {
   const c = props.c;
 
   return (
-  <div>
-      <StatisticLine text="good" value ={a} />
-      <StatisticLine text="neutral" value ={b} />
-      <StatisticLine text="bad" value ={c} />
+   <table>
+      <tbody>
+        <StatisticLine text="good" value ={a} />
+        <StatisticLine text="neutral" value ={b} />
+        <StatisticLine text="bad" value ={c} />
 
-    <br />
-
-    <Sum a={a} b={b} c={c} />
-    <Average a={a} b={b} c={c}/>
-    <Positive a={a} b={b} c={c}/>
-  </div>
+        <StatisticLine text="All" value ={<Sum a={a} b={b} c={c} />} />
+        <StatisticLine text="Average" value ={<Average a={a} b={b} c={c}/>} />
+        <StatisticLine text="Positive" value ={<Positive a={a} b={b} c={c}/>} />
+      </tbody>
+    </table>
   )
-
-
 }
 
 const Task2 = () => {
@@ -106,7 +98,7 @@ const Task2 = () => {
 
       <h2>statistics:</h2>
 
-    {feedbackGiven && <Statistics a={good} b={neutral} c={bad} />}
+      {feedbackGiven && <Statistics a={good} b={neutral} c={bad} />}
       
     </div>
   );
