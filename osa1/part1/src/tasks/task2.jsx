@@ -81,6 +81,11 @@ const Task2 = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
+  let feedbackGiven = false;
+  if (good > 0 || neutral > 0 || bad > 0) {
+    feedbackGiven = true;
+  }
+
   return (
     <div>
       <h1>Give feedback!</h1>
@@ -91,7 +96,8 @@ const Task2 = () => {
 
       <h2>statistics:</h2>
 
-      <Statistics a={good} b={neutral} c={bad} />
+    {feedbackGiven && <Statistics a={good} b={neutral} c={bad} />}
+      
     </div>
   );
 }
