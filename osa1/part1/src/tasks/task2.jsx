@@ -54,6 +54,28 @@ const Positive = (props) => {
     )
 }
 
+const Statistics = (props) => {
+  const a = props.a;
+  const b = props.b;
+  const c = props.c;
+
+  return (
+  <div>
+    <p>Good: {a}</p>
+    <p>Neutral: {b}</p>
+    <p>Bad: {c}</p>
+
+    <br />
+
+    <Sum a={a} b={b} c={c} />
+    <Average a={a} b={b} c={c}/>
+    <Positive a={a} b={b} c={c}/>
+  </div>
+  )
+
+
+}
+
 const Task2 = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
@@ -69,16 +91,7 @@ const Task2 = () => {
 
       <h2>statistics:</h2>
 
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-
-      <br />
-
-      <Sum a={good} b={neutral} c={bad} />
-      <Average a={good} b={neutral} c={bad}/>
-      <Positive a={good} b={neutral} c={bad}/>
-
+      <Statistics a={good} b={neutral} c={bad} />
     </div>
   );
 }
