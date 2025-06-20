@@ -54,6 +54,16 @@ const Positive = (props) => {
     )
 }
 
+const StatisticLine = (props) => {
+
+  return (
+    <div>
+      <p>{props.text}: {props.value}</p>
+    </div>
+  )
+    
+}
+
 const Statistics = (props) => {
   const a = props.a;
   const b = props.b;
@@ -61,9 +71,9 @@ const Statistics = (props) => {
 
   return (
   <div>
-    <p>Good: {a}</p>
-    <p>Neutral: {b}</p>
-    <p>Bad: {c}</p>
+      <StatisticLine text="good" value ={a} />
+      <StatisticLine text="neutral" value ={b} />
+      <StatisticLine text="bad" value ={c} />
 
     <br />
 
