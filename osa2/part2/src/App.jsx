@@ -6,6 +6,8 @@ const Course = ({course}) => {
       <Header header={course.name}/>
 
       <Content parts={course.parts}/>
+
+      <Total parts={course.parts}/>
     </div>
   )
 }
@@ -29,6 +31,20 @@ const Content = ({ parts }) => (
     ))}
   </div>
 )
+
+const Total = ({parts}) => {
+  let total = 0;
+
+  parts.map(part => (
+    total += part.exercises
+  ))
+
+  return (
+    <div>
+      <p>total of {total} exercises</p>
+    </div>
+  )
+}
 
 const App = () => {
   const course = {
