@@ -1,5 +1,42 @@
 import {useState} from 'react'
 
+const PersonForm = ({newName, newNumber, nameFieldChange, numberFieldChange, addPerson}) => {
+    return (
+    <form>
+        <div>name: <input value={newName} onChange={nameFieldChange}/></div>
+        <div>number: <input value={newNumber} onChange={numberFieldChange}/></div>
+
+        <div>
+            <button onClick={addPerson} type="submit">add</button>
+        </div>
+    </form>
+    )
+}
+
+const Persons = ({persons, newFilter}) => {
+    return (
+    <ul>
+        {persons.filter(person => 
+        person.name.toLowerCase().includes(newFilter.toLowerCase()) ||
+        person.number.includes(newFilter))
+        .map(filteredPerson => (
+            <li key={filteredPerson.name}>
+                {filteredPerson.name}: {filteredPerson.number}
+            </li>
+        ))}
+    </ul>
+    )
+}
+
+const Filter = ({newFilter, filterFieldChange}) => {
+    return (
+        <div> 
+            filter shown with <input value={newFilter} onChange={filterFieldChange} />
+            </div>
+    )
+}
+
+
 const Task2 = () => {
 
     const allPersons = [
@@ -50,33 +87,21 @@ const Task2 = () => {
         <div>
             <h1>Phonebook</h1>
 
-            <div>filter shown with <input value={newFilter} onChange={filterFieldChange}/></div>
+            <Filter newFilter={newFilter} filterFieldChange={filterFieldChange}/>
 
             <h2>Add a new</h2>
-            <form>
-                <div>name: <input value={newName} onChange={nameFieldChange}/></div>
-                <div>number: <input value={newNumber} onChange={numberFieldChange}/></div>
-
-                <div>
-                    <button onClick={addPerson} type="submit">add</button>
-                </div>
-            </form>
-
+            
+            <PersonForm newName={newName} newNumber={newNumber} 
+            nameFieldChange={nameFieldChange} numberFieldChange={numberFieldChange} 
+            addPerson={addPerson}/>
 
             <h2>Numbers:</h2>
 
-            <ul>
-                {persons.filter(person => 
-                person.name.toLowerCase().includes(newFilter.toLowerCase()) ||
-                person.number.includes(newFilter))
-                .map(filteredPerson => (
-                    <li key={filteredPerson.name}>
-                        {filteredPerson.name}: {filteredPerson.number}
-                    </li>
-                ))}
-            </ul>
+            <Persons persons={persons} newFilter={newFilter}/>
+            
         </div>
     )
+
 }
 
 export default Task2 
