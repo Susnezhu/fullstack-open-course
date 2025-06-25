@@ -14,16 +14,21 @@ const Task2 = () => {
         setNewName(event.target.value)
     }
 
+    const nameExists = persons.some(person => person.name === newName)
+
     const addPerson = (event) => {
         event.preventDefault()
-        console.log(newName)
         
-        const personObject = {
-            name: newName
-        }
+        if (!nameExists) {
+            const personObject = {
+                name: newName}
 
-        setPersons(persons.concat(personObject))
-        setNewName("")
+            setPersons(persons.concat(personObject))
+            setNewName("")
+        } else {
+            alert(`${newName} is already added to phonebook`)
+            setNewName("")
+        }
     }
 
     return (
