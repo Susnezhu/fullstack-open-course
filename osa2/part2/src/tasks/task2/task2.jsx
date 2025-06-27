@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import PersonsServise from "./persons"
-import "./styles.css"
+import { Message, ErrorMessage } from "./Message"
 
 const PersonForm = ({newName, newNumber, nameFieldChange, numberFieldChange, addPerson}) => {
     return (
@@ -39,18 +39,6 @@ const Filter = ({newFilter, filterFieldChange}) => {
     )
 }
 
-const Notification = ({message}) => {
-    if (message === null) {
-        return null
-    }
-
-    return (
-        <div className="message">
-            {message}
-        </div>
-    )
-}
-
 const Task2 = () => {
 
     const [persons, setPersons] = useState([])
@@ -60,6 +48,7 @@ const Task2 = () => {
     const [newFilter ,setNewFilter] = useState("")
 
     const [message, setMessage] = useState(null)
+    const [errorMessage, setErrorMessage] = useState(null)
 
     const hook = () => {
         PersonsServise
@@ -115,6 +104,9 @@ const Task2 = () => {
                         setPersons(persons.map(p => p.id !== personToUpdate.id ? p: returnedPerson))
                         sendMessage(`${newName} number has changed`)
                     })
+                    .catch(error => {
+                        sendError(`Person ${newName} was already removed from server`)
+                    })
             }
         }
         setNewName("")
@@ -129,6 +121,10 @@ const Task2 = () => {
                     setPersons(prev => prev.filter(p=> p.id !== id))
                     sendMessage(`${name} deleted`)
                 })
+                .catch(error => {
+                    sendError(`Person '${name}' was already removed from server`)
+                    setPersons(prev => prev.filter(p=> p.id !== id))
+                })
         }
     }
 
@@ -136,7 +132,15 @@ const Task2 = () => {
         setMessage(message)
 
         setTimeout(() => {
-            sendMessage(null)
+            setMessage(null)
+        }, 5000)
+    }
+
+    const sendError = (message) => {
+        setErrorMessage(message)
+
+        setTimeout(() => {
+            setErrorMessage(null)
         }, 5000)
     }
 
@@ -144,7 +148,8 @@ const Task2 = () => {
         <div>
             <h1>Phonebook</h1>
 
-            <Notification message={message} />
+            <Message message={message} />
+            <ErrorMessage message={errorMessage} />
 
             <Filter newFilter={newFilter} filterFieldChange={filterFieldChange}/>
 
