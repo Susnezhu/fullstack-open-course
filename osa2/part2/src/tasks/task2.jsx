@@ -90,10 +90,21 @@ const Task2 = () => {
                     setNewNumber("")
                 })
         } else {
-            alert(`${newName} is already added to phonebook`)
-            setNewName("")
-            setNewNumber("")
+            if (window.confirm(`${newName} is already added to phonebook, replace the old number with new one?`)) {
+                console.log("name changed")
+
+                const personToUpdate = persons.find(p => p.name === newName)
+                const updatedPerson = {...personToUpdate, number: newNumber}
+                
+                PersonsServise
+                    .update(personToUpdate.id, updatedPerson)
+                    .then(returnedPerson => {
+                        setPersons(persons.map(p => p.id !== personToUpdate.id ? p: returnedPerson))
+                    })
+            }
         }
+        setNewName("")
+        setNewNumber("")
     }
 
     const deletePerson = (id, name) => {
