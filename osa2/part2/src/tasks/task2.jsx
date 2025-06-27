@@ -55,6 +55,7 @@ const Task2 = () => {
     }
 
     useEffect(hook, [])
+
     
 
     const nameFieldChange = (event) => {
@@ -76,11 +77,17 @@ const Task2 = () => {
         if (!nameExists) {
             const personObject = {
                 name: newName,
-                number: newNumber}
-
-            setPersons(persons.concat(personObject))
-            setNewName("")
-            setNewNumber("")
+                number: newNumber,
+                id: String(persons.length + 1)
+            }
+            
+            axios
+                .post('http://localhost:3001/persons', personObject)
+                .then(response => {
+                    setPersons(persons.concat(response.data))
+                    setNewName("")
+                    setNewNumber("")
+                })
         } else {
             alert(`${newName} is already added to phonebook`)
             setNewName("")
