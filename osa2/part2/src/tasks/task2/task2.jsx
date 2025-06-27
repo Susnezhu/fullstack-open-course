@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
-import PersonsServise from "./task2services/persons"
-
+import PersonsServise from "./persons"
+import "./styles.css"
 
 const PersonForm = ({newName, newNumber, nameFieldChange, numberFieldChange, addPerson}) => {
     return (
@@ -39,6 +39,17 @@ const Filter = ({newFilter, filterFieldChange}) => {
     )
 }
 
+const Notification = ({message}) => {
+    if (message === null) {
+        return null
+    }
+
+    return (
+        <div className="message">
+            {message}
+        </div>
+    )
+}
 
 const Task2 = () => {
 
@@ -47,6 +58,8 @@ const Task2 = () => {
     const [newName, setNewName] = useState("")
     const [newNumber, setNewNumber] = useState("")
     const [newFilter ,setNewFilter] = useState("")
+
+    const [message, setMessage] = useState(null)
 
     const hook = () => {
         PersonsServise
@@ -88,10 +101,10 @@ const Task2 = () => {
                     setPersons(persons.concat(returnedPerson))
                     setNewName("")
                     setNewNumber("")
+                    sendMessage(`${newName} added`)
                 })
         } else {
             if (window.confirm(`${newName} is already added to phonebook, replace the old number with new one?`)) {
-                console.log("name changed")
 
                 const personToUpdate = persons.find(p => p.name === newName)
                 const updatedPerson = {...personToUpdate, number: newNumber}
@@ -100,6 +113,7 @@ const Task2 = () => {
                     .update(personToUpdate.id, updatedPerson)
                     .then(returnedPerson => {
                         setPersons(persons.map(p => p.id !== personToUpdate.id ? p: returnedPerson))
+                        sendMessage(`${newName} number has changed`)
                     })
             }
         }
@@ -112,15 +126,25 @@ const Task2 = () => {
             PersonsServise
                 .remove(id)
                 .then(() => {
-                    console.log(`${name} deleted`)
                     setPersons(prev => prev.filter(p=> p.id !== id))
+                    sendMessage(`${name} deleted`)
                 })
         }
+    }
+
+    const sendMessage = (message) => {
+        setMessage(message)
+
+        setTimeout(() => {
+            sendMessage(null)
+        }, 5000)
     }
 
     return (
         <div>
             <h1>Phonebook</h1>
+
+            <Notification message={message} />
 
             <Filter newFilter={newFilter} filterFieldChange={filterFieldChange}/>
 
