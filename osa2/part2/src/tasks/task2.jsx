@@ -1,5 +1,6 @@
-import axios from 'axios'
 import {useState, useEffect} from 'react'
+import PersonsServise from "./task2services/persons"
+
 
 const PersonForm = ({newName, newNumber, nameFieldChange, numberFieldChange, addPerson}) => {
     return (
@@ -47,10 +48,10 @@ const Task2 = () => {
     const [newFilter ,setNewFilter] = useState("")
 
     const hook = () => {
-        axios
-        .get(('http://localhost:3001/persons'))
-        .then(response => {
-            setPersons(response.data)
+        PersonsServise
+        .getAll()
+        .then(initialPerson => {
+            setPersons(initialPerson)
         })
     }
 
@@ -81,10 +82,10 @@ const Task2 = () => {
                 id: String(persons.length + 1)
             }
             
-            axios
-                .post('http://localhost:3001/persons', personObject)
-                .then(response => {
-                    setPersons(persons.concat(response.data))
+            PersonsServise
+                .create(personObject)
+                .then(returnedPerson => {
+                    setPersons(persons.concat(returnedPerson))
                     setNewName("")
                     setNewNumber("")
                 })
