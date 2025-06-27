@@ -15,7 +15,7 @@ const PersonForm = ({newName, newNumber, nameFieldChange, numberFieldChange, add
     )
 }
 
-const Persons = ({persons, newFilter}) => {
+const Persons = ({persons, newFilter, deletePerson}) => {
     return (
     <ul>
         {persons.filter(person => 
@@ -24,6 +24,7 @@ const Persons = ({persons, newFilter}) => {
         .map(filteredPerson => (
             <li key={filteredPerson.name}>
                 {filteredPerson.name}: {filteredPerson.number}
+                <button onClick={() => deletePerson(filteredPerson.id, filteredPerson.name)}>delete</button>
             </li>
         ))}
     </ul>
@@ -78,8 +79,7 @@ const Task2 = () => {
         if (!nameExists) {
             const personObject = {
                 name: newName,
-                number: newNumber,
-                id: String(persons.length + 1)
+                number: newNumber
             }
             
             PersonsServise
@@ -93,6 +93,17 @@ const Task2 = () => {
             alert(`${newName} is already added to phonebook`)
             setNewName("")
             setNewNumber("")
+        }
+    }
+
+    const deletePerson = (id, name) => {
+        if (window.confirm(`delete ${name}?`)) {
+            PersonsServise
+                .remove(id)
+                .then(() => {
+                    console.log(`${name} deleted`)
+                    setPersons(prev => prev.filter(p=> p.id !== id))
+                })
         }
     }
 
@@ -110,7 +121,7 @@ const Task2 = () => {
 
             <h2>Numbers:</h2>
 
-            <Persons persons={persons} newFilter={newFilter}/>
+            <Persons persons={persons} newFilter={newFilter} deletePerson={deletePerson}/>
             
         </div>
     )
