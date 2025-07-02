@@ -57,6 +57,21 @@ app.delete("/api/persons/:id", (request, response) => {
     response.json(persons)
 })
 
+app.post("/api/persons", (request, response) => {
+    try {
+        const {name, number} = request.body
+
+        const newPerson = {
+            id: Math.floor(Math.random() * 10000),
+            name,
+            number
+        }
+        persons.push(newPerson)
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 const PORT = 3001
     app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
