@@ -61,12 +61,25 @@ app.post("/api/persons", (request, response) => {
     try {
         const {name, number} = request.body
 
+        if (!name || !number) {
+            return response.status(400).json({error: "name or number is missing"})
+        }
+
+        const nameExists = persons.some(person => person.name.toLowerCase() === name.toLowerCase())
+
+        if (nameExists) {
+            return response.status(409).json({error: "Name already exist"})
+        }
+
         const newPerson = {
             id: Math.floor(Math.random() * 10000),
             name,
             number
         }
         persons.push(newPerson)
+
+        return response.status(201).json(newPerson)
+
     } catch (error) {
         console.log(error)
     }
