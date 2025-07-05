@@ -1,10 +1,12 @@
 const express = require("express")
 const morgan = require("morgan")
-
 const app = express()
+const cors = require('cors')
 
 app.use(express.json())
 app.use(morgan("tiny"))
+app.use(express.static("client/build"))
+app.use(cors())
 
 let persons = [
     {
@@ -53,11 +55,11 @@ app.get("/info", (request, response) => {
 })
 
 app.delete("/api/persons/:id", (request, response) => {
-    const id = request.params.id
+    const id = request.params.id.toString()
 
     persons = persons.filter(person => person.id !== id)
-
-    response.json(persons)
+    
+    response.status(204).end()
 })
 
 app.post("/api/persons", (request, response) => {
@@ -75,7 +77,7 @@ app.post("/api/persons", (request, response) => {
         }
 
         const newPerson = {
-            id: Math.floor(Math.random() * 10000),
+            id: Math.floor(Math.random() * 1000000).toString(),
             name,
             number
         }
