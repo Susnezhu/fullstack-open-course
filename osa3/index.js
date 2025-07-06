@@ -4,15 +4,13 @@ const app = express()
 
 app.use(express.json())
 app.use(morgan("tiny"))
-app.use(express.static("client/build"))
-
 
 const path = require('path')
 
-app.use(express.static(path.join(__dirname, 'client', 'build')))
+app.use(express.static(path.join(__dirname, 'client', 'dist')))
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'))
 })
 
 
