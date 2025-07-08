@@ -13,6 +13,9 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'))
 })
 
+console.log('__dirname:', __dirname);
+console.log('Static folder:', path.join(__dirname, 'client', 'build'));
+
 
 let persons = [
     {
@@ -41,7 +44,7 @@ app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/{:id}", (request, response) => {
     const id = request.params.id
     const person = persons.find(person => person.id === id)
 
@@ -60,7 +63,7 @@ app.get("/info", (request, response) => {
         <p>${time}</p>`)
 })
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/{:id}", (request, response) => {
     const id = request.params.id.toString()
 
     persons = persons.filter(person => person.id !== id)
