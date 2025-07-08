@@ -66,7 +66,7 @@ app.get("/info", (request, response) => {
 app.delete("/api/persons/:id", (request, response) => {
     const id = request.params.id.toString()
 
-    persons = persons.filter(person => person.id !== id)
+    persons = Object.values(persons).filter(person => person.id !== id)
     
     response.status(204).end()
 })
