@@ -16,11 +16,13 @@ const PersonForm = ({newName, newNumber, nameFieldChange, numberFieldChange, add
 }
 
 const Persons = ({persons, newFilter, deletePerson}) => {
+
     return (
     <ul>
-        {Object.values(persons).filter(person => 
-        person.name.toLowerCase().includes(newFilter.toLowerCase()) ||
-        person.number.includes(newFilter))
+        {persons.filter(person => {
+        if (!person.name || !person.number) return false
+        return person.name.toLowerCase().includes(newFilter.toLowerCase()) ||
+        person.number.includes(newFilter)})
         .map(filteredPerson => (
             <li key={filteredPerson.id}>
                 {filteredPerson.name}: {filteredPerson.number}
