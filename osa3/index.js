@@ -7,16 +7,6 @@ app.use(morgan("tiny"))
 
 const path = require('path')
 
-app.use(express.static(path.join(__dirname, 'client', 'dist')))
-
-app.get('/{*any}', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'))
-})
-
-console.log('__dirname:', __dirname);
-console.log('Static folder:', path.join(__dirname, 'client', 'build'));
-
-
 let persons = [
     {
         id: "1",
@@ -66,7 +56,7 @@ app.get("/info", (request, response) => {
 app.delete("/api/persons/:id", (request, response) => {
     const id = request.params.id.toString()
 
-    persons = Object.values(persons).filter(person => person.id !== id)
+    persons = persons.filter(person => person.id !== id)
     
     response.status(204).end()
 })
@@ -99,6 +89,11 @@ app.post("/api/persons", (request, response) => {
     }
 })
 
+app.use(express.static(path.join(__dirname, 'client', 'dist')))
+
+app.get('/{*any}', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'))
+})
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
