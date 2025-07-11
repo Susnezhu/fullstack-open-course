@@ -1,3 +1,2 @@
 .DS_Store
-osa3/node_modules/
-osa3/client/node_modules/
+**/node_modules/
