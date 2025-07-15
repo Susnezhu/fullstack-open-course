@@ -1,3 +1,6 @@
+require('dotenv').config()
+const Person = require('./models/person.js')
+
 const express = require("express")
 const morgan = require("morgan")
 const app = express()
@@ -7,46 +10,25 @@ app.use(morgan("tiny"))
 
 const path = require('path')
 
-let persons = [
-    {
-        id: "1",
-        name: "Arto Hellas",
-        number: "040-123456"
-    },
-    {
-        id: "2",
-        name: "Ada Lovelace",
-        number: "39-44-5323523"
-    },
-    {
-        id: "3",
-        name: "Dan Abramov",
-        number: "12-43-234345"
-    },
-    {
-        id: "4",
-        name: "Mary Poppendieck",
-        number: "39-23-6423122"
-    }
-]
+
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({}).then(person => {
+        response.json(person)
+    })
 })
 
 app.get("/api/persons/:id", (request, response) => {
-    const id = request.params.id
-    const person = persons.find(person => person.id === id)
-
-    if (person) {
+    Person.findById(request.params.id).then(person => {
         response.json(person)
-    } else {
-        response.status(404).end()
-    }
+    })
 })
 
 app.get("/info", (request, response) => {
-    const quantity = persons.length
+    const quantity = 0
+    Person.find(person => {
+        quantity++
+    })
     const time = new Date()
     response.send(`
         <p>Phonebook has info for ${quantity} people </p>
@@ -54,39 +36,30 @@ app.get("/info", (request, response) => {
 })
 
 app.delete("/api/persons/:id", (request, response) => {
-    const id = request.params.id.toString()
-
-    persons = persons.filter(person => person.id !== id)
-    
-    response.status(204).end()
+    Person.findByIdAndDelete(request.params.id)
+        .then(() => {
+            response.status(204).end()
+        })
+        .catch(error => {
+            response.status(500).json({ error: 'deletion failed' })
+        })
 })
 
 app.post("/api/persons", (request, response) => {
-    try {
-        const {name, number} = request.body
+    const body = request.body
 
-        if (!name || !number) {
-            return response.status(400).json({error: "name or number is missing"})
-        }
-
-        const nameExists = persons.some(person => person.name.toLowerCase() === name.toLowerCase())
-
-        if (nameExists) {
-            return response.status(409).json({error: "Name already exist"})
-        }
-
-        const newPerson = {
-            id: Math.floor(Math.random() * 1000000).toString(),
-            name,
-            number
-        }
-        persons.push(newPerson)
-
-        return response.status(201).json(newPerson)
-
-    } catch (error) {
-        console.log(error)
+    if (!body.name && !body.number) {
+        return response.status(400).json({ error: 'content missing' })
     }
+
+    const person = new Person({
+        name: body.name,
+        number: body.number,
+    })
+
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 })
 
 app.use(express.static(path.join(__dirname, 'client', 'dist')))
