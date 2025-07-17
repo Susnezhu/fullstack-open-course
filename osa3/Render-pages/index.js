@@ -11,44 +11,44 @@ app.use(morgan("tiny"))
 const path = require('path')
 
 
-
 app.get('/api/persons', (request, response) => {
     Person.find({}).then(person => {
         response.json(person)
     })
 })
 
-app.get("/api/persons/:id", (request, response) => {
-    Person.findById(request.params.id).then(person => {
-        response.json(person)
-    })
+app.get("/api/persons/:id", (request, response, next) => {
+    Person.findById(request.params.id)
+        .then(person => {
+            if (person) {
+                response.json(person)
+            } else {
+                response.status(404).end()
+            }
+        })
+        .catch(error => next(error))
 })
 
 app.get("/info", (request, response) => {
-    const quantity = 0
-    Person.find(person => {
-        quantity++
-    })
+    const quantity = Person.length
     const time = new Date()
     response.send(`
         <p>Phonebook has info for ${quantity} people </p>
         <p>${time}</p>`)
 })
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
         .then(() => {
             response.status(204).end()
         })
-        .catch(error => {
-            response.status(500).json({ error: 'deletion failed' })
-        })
+        .catch(error => next(error))
 })
 
 app.post("/api/persons", (request, response) => {
     const body = request.body
 
-    if (!body.name && !body.number) {
+    if (!body.name || !body.number) {
         return response.status(400).json({ error: 'content missing' })
     }
 
@@ -62,11 +62,48 @@ app.post("/api/persons", (request, response) => {
     })
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  Person.findById(request.params.id)
+    .then(person => {
+        if (!person) {
+            return response.status(404).end()
+        }
+
+    person.name = body.name
+    person.number = body.number
+
+    return person.save().then((updatedPerson) => {
+        response.json(updatedPerson)
+    })
+        })
+    .catch(error => next(error))
+})
+
 app.use(express.static(path.join(__dirname, 'client', 'dist')))
 
 app.get('/{*any}', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'))
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
+app.use(errorHandler)
+
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
