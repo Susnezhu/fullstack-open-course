@@ -137,7 +137,7 @@ const App = () => {
 
         setTimeout(() => {
             setMessage(null)
-        }, 5000)
+        }, 7000)
     }
 
     const sendError = (message) => {
@@ -145,7 +145,7 @@ const App = () => {
 
         setTimeout(() => {
             setErrorMessage(null)
-        }, 5000)
+        }, 7000)
     }
 
     return (
