@@ -93,6 +93,8 @@ const App = () => {
                     setNewName("")
                     setNewNumber("")
                     sendMessage(`${newName} added`)
+                }).catch(error => {
+                    sendError(error.response.data.error)
                 })
         } else {
             if (window.confirm(`${newName} is already added to phonebook, replace the old number with new one?`)) {
