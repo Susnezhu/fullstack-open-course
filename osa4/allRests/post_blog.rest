@@ -4,6 +4,6 @@ Content-Type: application/json
 {
   "title": "Bad day",
   "author": "Michael",
-  "url": "",
-  "likes": 5,
+  "url": "link will be here",
+  "likes": 5
 }
