@@ -6,11 +6,29 @@ const emptyArray = (array) => {
 }
 
 const dummy = (blogs) => {
-
-    return 1
+  return 1
 }
+
+const totalLikes = (blogs) => {
+  return blogs.reduce((sum, blog) => sum + blog.likes, 0)
+}
+
+const favoriteBlog = (blogs) => {
+  let favorite = 0
+
+  for (let i = 0; i < blogs.length; i++) {
+    const current = blogs[i].likes
+    if (current > favorite) {
+      favorite = current
+    }
+  }
+  return favorite
+}
+
 
 module.exports = {
   emptyArray,
-  dummy
+  dummy,
+  totalLikes,
+  favoriteBlog
 }
