@@ -6,6 +6,7 @@ const dummy = require('./utils/list_helper.js').dummy
 const totalLikes = require('./utils/list_helper.js').totalLikes
 const favoriteBlog = require('./utils/list_helper.js').favoriteBlog
 const mostBlogs = require('./utils/list_helper.js').mostBlogs
+const mostLikes = require('./utils/list_helper.js').mostLikes
 
 const blogs = [
   {
@@ -39,7 +40,16 @@ const blogs = [
     url: 'https://copyblogger.com/make-money-social-media/',
     likes: 5,
     __v: 0
+  },
+  {    
+    _id: '5a422aa71b54a676234das111',
+    title: 'How To Get Clients As a Freelancer',
+    author: 'Tim Stoddart',
+    url: 'https://copyblogger.com/how-to-get-freelance-clients/',
+    likes: 10,
+    __v: 0
   }
+
 ]
 
 test('exepted return = 1', () => {
@@ -52,7 +62,7 @@ test('exepted return = 1', () => {
 describe('all blogs check', () => {
   test('total likes', () => {
     const result = totalLikes(blogs)
-    assert.strictEqual(result, 40)
+    assert.strictEqual(result, 50)
   })
 
   test('favorite blog', () => {
@@ -67,6 +77,11 @@ describe('all blogs check', () => {
 
   test('most blogs', () => {
     const result4 = mostBlogs(blogs)
-    assert.strictEqual(result4, "Charles Miller")
+    assert.deepStrictEqual(result4,{allBlogs: 2, author: 'Tim Stoddart'})
+  })
+
+  test('most likes', () => {
+    const result5 = mostLikes(blogs)
+    assert.deepStrictEqual(result5, {author: 'Tim Stoddart', totalLikes: 30})
   })
 })
