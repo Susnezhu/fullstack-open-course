@@ -5,6 +5,7 @@ const emptyArray = require('./utils/list_helper.js').emptyArray
 const dummy = require('./utils/list_helper.js').dummy
 const totalLikes = require('./utils/list_helper.js').totalLikes
 const favoriteBlog = require('./utils/list_helper.js').favoriteBlog
+const mostBlogs = require('./utils/list_helper.js').mostBlogs
 
 const blogs = [
   {
@@ -28,7 +29,15 @@ const blogs = [
     title: 'How To Build a Personal Brand From Scratch',
     author: 'Charles Miller',
     url: 'https://copyblogger.com/build-a-personal-brand/',
-    likes: 15,
+    likes: 10,
+    __v: 0
+  },
+  {
+    _id: '2123769isahd112312skdf03024',
+    title: 'How To Make Money On Social Media ',
+    author: 'Charles Miller',
+    url: 'https://copyblogger.com/make-money-social-media/',
+    likes: 5,
     __v: 0
   }
 ]
@@ -54,5 +63,10 @@ describe('all blogs check', () => {
   test('is array empty', () => {
     const result3 = emptyArray(blogs)
     assert.strictEqual(result3, false)
-  }) 
+  })
+
+  test('most blogs', () => {
+    const result4 = mostBlogs(blogs)
+    assert.strictEqual(result4, "Charles Miller")
+  })
 })
