@@ -11,10 +11,20 @@ app.get('/api/blogs', async (request, response) => {
 })
 
 app.post('/api/blogs', async (request, response) => {
-  const blog = new Blog(request.body)
+  const body = request.body
 
-  const savedBlog = await blog.save()
-  response.status(201).json(savedBlog) 
+  if (!body.title || !body.url) {
+    return response.status(400).end()
+  }
+
+  try {
+    const blog = new Blog(request.body)
+
+    const savedBlog = await blog.save()
+    response.status(201).json(savedBlog) 
+  } catch {error} {
+    response.status(500).json({ error: error.message })
+  }
 })
 
 module.exports = app
