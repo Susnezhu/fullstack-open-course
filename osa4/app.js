@@ -27,4 +27,16 @@ app.post('/api/blogs', async (request, response) => {
   }
 })
 
+app.delete('/api/blogs/:id', async (request, response) => {
+  await Blog
+    .findByIdAndDelete(request.params.id)
+    .then(blog => {
+      if (blog) {
+        response.json(blog)
+      } else {
+        response.status(404).end()
+      }
+    })
+})
+
 module.exports = app

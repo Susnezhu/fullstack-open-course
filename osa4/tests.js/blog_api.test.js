@@ -8,6 +8,18 @@ const api = supertest(app)
 
 const Blog = require('../models/blogs')
 const testBlogs = [
+    {
+    title: 'blog for deleting',
+    author: 'test author',
+    url: 'link will be here',
+    likes: 10,
+  },
+  {
+    title: 'blog for deleting 2',
+    author: 'test author',
+    url: 'link will be here',
+    likes: 1,
+  },
   {
     title: 'first test blog',
     author: 'first test person',
@@ -84,6 +96,36 @@ test('missing url return 400', async () => {
       title: "test blog",
       author: "test author",
     }).expect(400)
+})
+
+test('delete response is 200', async () => {
+  const response = await api.get('/api/blogs').expect(200)
+  const blogId = response.body[0].id
+
+  await api
+    .delete(`/api/blogs/${blogId}`)
+    .expect(200)
+})
+
+test('blog is not defined return 404', async () => {
+  const missingId = new mongoose.Types.ObjectId()
+
+  await api
+    .delete(`/api/blogs/${missingId}`)
+    .expect(404)
+})
+
+test('right amount blogs returned', async () => {
+  const response = await api.get('/api/blogs').expect(200)
+  const blogsB4 = response.body.length
+
+  const blogId = response.body[0].id
+  await api.delete(`/api/blogs/${blogId}`).expect(200)
+
+  const response2 = await api.get('/api/blogs')
+  const blogsNow = response2.body.length
+
+  assert.strictEqual(blogsB4 -1, blogsNow)
 })
 
 after(async () => {
