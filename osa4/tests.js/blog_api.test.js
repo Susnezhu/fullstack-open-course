@@ -128,6 +128,33 @@ test('right amount blogs returned', async () => {
   assert.strictEqual(blogsB4 -1, blogsNow)
 })
 
+test('put returns status 200', async () => {
+  const response = await api.get('/api/blogs').expect(200)
+  const blogId = response.body[0].id
+
+  await api
+    .put(`/api/blogs/${blogId}`)
+    .send({ likes: 15 })
+    .expect(200)
+})
+
+test('amount likes changed', async () => {
+  const response = await api.get('/api/blogs').expect(200)
+  const blogId = response.body[0].id
+  const update = { likes: 20 }
+
+  await api
+    .put(`/api/blogs/${blogId}`)
+    .send(update)
+    .expect(200)
+
+  const changedBlog = await api
+    .get(`/api/blogs/${blogId}`)
+    .expect(200)
+
+  assert.strictEqual(update.likes, changedBlog.body.likes)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })

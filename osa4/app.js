@@ -10,6 +10,19 @@ app.get('/api/blogs', async (request, response) => {
   response.json(blogs)
 })
 
+app.get('/api/blogs/:id', async (request, response) => {
+  const id = request.params.id
+  await Blog
+    .findById(id)
+    .then(blog => {
+      if (blog) {
+        response.json(blog)
+      } else {
+        response.status(404).end
+      }
+    })
+})
+
 app.post('/api/blogs', async (request, response) => {
   const body = request.body
 
@@ -37,6 +50,19 @@ app.delete('/api/blogs/:id', async (request, response) => {
         response.status(404).end()
       }
     })
+})
+app.put('/api/blogs/:id', async (request, response) => {
+  const body = request.body
+  const id = request.params.id
+
+  const updated = await Blog
+    .findByIdAndUpdate(id, body, { new: true, runValidators: true })
+
+  if (updated) {
+    response.status(200).json(updated)
+  } else {
+    response.status(404).end()
+  }
 })
 
 module.exports = app
