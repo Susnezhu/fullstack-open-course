@@ -38,7 +38,7 @@ const PopularVote  = (props) => {
   )
 }
 
-const Task3 = () => {
+const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -81,4 +81,4 @@ const Task3 = () => {
   )
 }
 
-export default Task3;
+export default App;

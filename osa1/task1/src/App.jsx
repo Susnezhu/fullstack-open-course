@@ -38,7 +38,7 @@ const Total = (props) => {
 }
 
 
-const Task1 = () => {
+const App = () => {
   const course = {
     name: 'Half Stack application development',
     parts: [
@@ -66,4 +66,4 @@ const Task1 = () => {
   )
 }
 
-export default Task1;
+export default App;
