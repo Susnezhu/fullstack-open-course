@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 
-const Task3 = () => {
+const App = () => {
     const baseUrl = "https://studies.cs.helsinki.fi/restcountries/api/all"
 
     const [countries, setCountries] = useState([])
@@ -92,4 +92,4 @@ const CountryDetail = ({country}) => {
     )
 }
 
-export default Task3
+export default App

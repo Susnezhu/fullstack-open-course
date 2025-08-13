@@ -1,7 +1,7 @@
 import Course from "./Course";
 
 
-const Task1 = () => {
+const App = () => {
 const courses = [
     {
       name: 'Half Stack application development',
@@ -54,4 +54,4 @@ const courses = [
   )
 }
 
-export default Task1
+export default App

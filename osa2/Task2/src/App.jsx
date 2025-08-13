@@ -39,7 +39,7 @@ const Filter = ({newFilter, filterFieldChange}) => {
     )
 }
 
-const Task2 = () => {
+const App = () => {
 
     const [persons, setPersons] = useState([])
 
@@ -168,4 +168,4 @@ const Task2 = () => {
 
 }
 
-export default Task2 
+export default App
