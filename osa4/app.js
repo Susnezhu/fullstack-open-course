@@ -12,15 +12,13 @@ app.get('/api/blogs', async (request, response) => {
 
 app.get('/api/blogs/:id', async (request, response) => {
   const id = request.params.id
-  await Blog
-    .findById(id)
-    .then(blog => {
-      if (blog) {
-        response.json(blog)
-      } else {
-        response.status(404).end
-      }
-    })
+  const blog = await Blog.findById(id)
+
+  if (blog) {
+    response.json(blog)
+  } else {
+    response.status(404).end
+  }
 })
 
 app.post('/api/blogs', async (request, response) => {
@@ -41,22 +39,25 @@ app.post('/api/blogs', async (request, response) => {
 })
 
 app.delete('/api/blogs/:id', async (request, response) => {
-  await Blog
-    .findByIdAndDelete(request.params.id)
-    .then(blog => {
-      if (blog) {
-        response.json(blog)
-      } else {
-        response.status(404).end()
-      }
-    })
+  const blog = await Blog.findByIdAndDelete(request.params.id)
+
+  if (blog) {
+    response.json(blog)
+  } else {
+    response.status(404).end()
+  }
 })
+
 app.put('/api/blogs/:id', async (request, response) => {
   const body = request.body
   const id = request.params.id
 
   const updated = await Blog
-    .findByIdAndUpdate(id, body, { new: true, runValidators: true })
+    .findByIdAndUpdate(
+      id, 
+      body, 
+      { new: true, runValidators: true }
+    )
 
   if (updated) {
     response.status(200).json(updated)
