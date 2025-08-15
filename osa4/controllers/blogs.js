@@ -1,20 +1,13 @@
-const express = require('express')
+const blogsRouter = require('express').Router()
+const Blog = require('../models/blogs')
 
-const Blog = require('./models/blogs.js')
-const User = require('./models/users.js')
 
-const usersRouter = require('./controllers/users.js')
-
-const app = express()
-app.use(express.json())
-app.use('/api/users' , usersRouter)
-
-app.get('/api/blogs', async (request, response) => {
-  const blogs = await Blog.find({})
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({}) 
   response.json(blogs)
 })
 
-app.get('/api/blogs/:id', async (request, response) => {
+blogsRouter.get('/', async (request, response) => {
   const id = request.params.id
   const blog = await Blog.findById(id)
 
@@ -25,7 +18,7 @@ app.get('/api/blogs/:id', async (request, response) => {
   }
 })
 
-app.post('/api/blogs', async (request, response) => {
+blogsRouter.post('/', async (request, response) => {
   const body = request.body
 
   if (!body.title || !body.url) {
@@ -33,16 +26,15 @@ app.post('/api/blogs', async (request, response) => {
   }
 
   try {
-    const blog = new Blog(request.body)
-
+    const blog = new Blog(body)
     const savedBlog = await blog.save()
-    response.status(201).json(savedBlog) 
-  } catch {error} {
+    response.status(201).json(savedBlog)
+  } catch (error) {
     response.status(500).json({ error: error.message })
   }
 })
 
-app.delete('/api/blogs/:id', async (request, response) => {
+blogsRouter.delete('/', async (request, response) => {
   const blog = await Blog.findByIdAndDelete(request.params.id)
 
   if (blog) {
@@ -52,7 +44,7 @@ app.delete('/api/blogs/:id', async (request, response) => {
   }
 })
 
-app.put('/api/blogs/:id', async (request, response) => {
+blogsRouter.put('/', async (request, response) => {
   const body = request.body
   const id = request.params.id
 
@@ -70,4 +62,4 @@ app.put('/api/blogs/:id', async (request, response) => {
   }
 })
 
-module.exports = app
+module.exports = blogsRouter
