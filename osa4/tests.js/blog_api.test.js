@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, before } = require('node:test')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
@@ -6,7 +6,9 @@ const assert = require('node:assert')
 
 const api = supertest(app)
 
+require('dotenv').config()
 const Blog = require('../models/blogs')
+
 const testBlogs = [
     {
     title: 'blog for deleting',
@@ -33,10 +35,17 @@ const testBlogs = [
     likes: 5,
   }
 ]
+
+before(async () => {
+  const MONGODB_URI = process.env.TEST_MONGODB_URI
+  await mongoose.connect(MONGODB_URI)
+})
+
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(testBlogs)
 })
+
 
 test('blogs are returned as json', async () => {
   await api

@@ -2,6 +2,7 @@ const express = require('express')
 
 require('dotenv').config()
 const mongoose = require('mongoose')
+const app = require('./app.js')
 
 const MONGODB_URI = process.env.NODE_ENV === 'test' 
   ? process.env.TEST_MONGODB_URI
