@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikp1a29rbyIsImlkIjoiNjhhMWMzMDIyZDkwMmQ1ZTdhYWJjMDJjIiwiaWF0IjoxNzU1NDQ5NjA3fQ.IrQyqeQLvFggKtKv8opm0l8W6OWQOq_ll_cfK8F8G1s
 
 {
   "title": "test blog",
-  "author": "test person",
-  "url": "here will be url",
+  "author": "test author",
+  "url": "https://copyblogger.com/build-a-personal-brand/",
   "likes": 5
 }
