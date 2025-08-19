@@ -25,10 +25,17 @@ blogsRouter.get('/:id', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
 
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  let decodedToken = undefined
+  try {
+    decodedToken = jwt.verify(request.token, process.env.SECRET)
+  } catch (error) {
+    return response.status(401).json({ error: 'token invalid or missing' })
+  }
+
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
+
   const user = await User.findById(decodedToken.id)
 
   if (!body.title || !body.url) {
@@ -45,26 +52,44 @@ blogsRouter.post('/', async (request, response) => {
     })
 
     const savedBlog = await blog.save()
-
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
 
     response.status(201).json(savedBlog)
-
   } catch (error) {
     console.error(error)
     response.status(500).json({ error: error.message })
   }
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
-  const blog = await Blog.findByIdAndDelete(request.params.id)
 
-  if (blog) {
-    response.json(blog)
-  } else {
-    response.status(404).end()
+blogsRouter.delete('/:id', async (request, response) => {
+
+  let decodedToken = undefined
+  try {
+    decodedToken = jwt.verify(request.token, process.env.SECRET)
+  } catch (error) {
+    return response.status(401).json({ error: 'token invalid or missing' })
   }
+
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+
+  const user = await User.findById(decodedToken.id)
+  const blog = await Blog.findById(request.params.id)
+
+  try {
+    if (blog.user.toString() === user.id.toString()) {
+      await Blog.findByIdAndDelete(request.params.id)
+      return response.status(200).json({ blog: 'blog deleted' })
+    } else {
+      return response.status(401).json({ error: 'only owner can delete blog' })
+    }
+  } catch (error) {
+    return response.status(400).json({ error: 'blog was not deleted' })
+  }
+
 })
 
 blogsRouter.put('/:id', async (request, response) => {
