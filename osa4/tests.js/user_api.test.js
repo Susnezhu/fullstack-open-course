@@ -4,11 +4,12 @@ const supertest = require('supertest')
 const app = require('../app')
 const assert = require('node:assert')
 require('dotenv').config()
-
 const api = supertest(app)
 
+const { UpdateTestUsers, UpdateTestBlogs } = require('./test_helper')
+
+const Blog = require('../models/blogs')
 const User = require('../models/users')
-const { getTestUsers } = require('./testUsers')
 
 before(async () => {
   const MONGODB_URI = process.env.TEST_MONGODB_URI
@@ -17,21 +18,25 @@ before(async () => {
 
 beforeEach(async () => {
   await User.deleteMany({})
-  const users = await getTestUsers()
-  await User.insertMany(users)
+  await Blog.deleteMany({})
+
+  await UpdateTestUsers()
+  await UpdateTestBlogs()
 })
 
-test('users returned', async () => {
+test('users returned successfully', async () => {
   await api.get('/api/users').expect(200)
 })
 
 describe('wrong users returns 400', () => {
   test('too short username', async () => {
-    const res = await api.post('/api/users').send({
-      username: "Le",
-      name: "Leo Mirkam",
-      password: "aaaaaaa"
-    }).expect(400)
+    const res = await api
+      .post('/api/users')
+      .send({
+        username: "Le",
+        name: "Leo Mirkam",
+        password: "aaaaaaa"
+      }).expect(400)
 
     assert(res.body.error.includes("password or username length is too short"))
   })
@@ -58,7 +63,6 @@ describe('wrong users returns 400', () => {
     assert(res.body.error.includes("username already exist"))
   })
 })
-
 
 
 
