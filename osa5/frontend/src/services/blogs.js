@@ -33,7 +33,7 @@ const createNewBlog = async (blog) => {
       {headers: {Authorization: `Bearer ${token}`}}
     )
 
-  return response.data
+  return response
 }
 
 export default { getAll, getLoggedUser, createNewBlog }

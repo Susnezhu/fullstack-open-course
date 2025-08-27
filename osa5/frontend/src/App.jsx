@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
+import { Message } from './messages'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,7 +14,9 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
- 
+  const [message, setMessage] = useState(null)
+
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -28,6 +31,17 @@ const App = () => {
       }
   }, [])
 
+  const showMessage = (message, color) => {
+    const messageObj = [message, color]
+
+    setMessage(messageObj)
+
+    setTimeout(() => {
+      setMessage(null)
+    }, 7000)
+  }
+
+
   const handleLogin = (event) => {
     event.preventDefault()
     console.log('logging in with', username)
@@ -41,6 +55,7 @@ const App = () => {
       })
       .catch(error => {
         console.log('loggin error:', error)
+        showMessage("Wrong password or username", "red")
       })
   }
 
@@ -49,19 +64,42 @@ const App = () => {
     window.localStorage.removeItem('user')
   }
 
-  const handleNewBlog = () => {
+  const handleNewBlog = async (event) => {
+    event.preventDefault()
+
     const newBlog = {
       title: title,
       author: author,
       url: url
     }
-    blogService.createNewBlog(newBlog)
+    
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+
+    try {
+      const response = await blogService.createNewBlog(newBlog)
+
+      if (response) {
+        showMessage(`A new blog "${title}" by "${author}" added`, "green")
+      }
+
+      blogService.getAll().then(blogs =>
+        setBlogs( blogs )
+      )
+    } catch (error) {
+      console.log("adding new blog error: ", error)
+      showMessage("Error adding new blog", "red")
+    }
+    
   }
 
   if (user === null) {
     return (
       <div>
         <h1>Log in to application</h1>
+
+        <Message message={message}/>
 
         <form onSubmit={handleLogin}>
           <label>Username: </label>
@@ -80,6 +118,8 @@ const App = () => {
     <div>
       <button onClick={handleLogOut}>log out</button>
       <p>{user.name} logged in</p>
+
+      <Message message={message}/>
 
       <h2>Create new</h2>
       <form onSubmit={handleNewBlog}>
