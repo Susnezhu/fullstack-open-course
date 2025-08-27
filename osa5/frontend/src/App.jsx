@@ -4,9 +4,14 @@ import blogService from './services/blogs'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
  
   useEffect(() => {
@@ -44,6 +49,15 @@ const App = () => {
     window.localStorage.removeItem('user')
   }
 
+  const handleNewBlog = () => {
+    const newBlog = {
+      title: title,
+      author: author,
+      url: url
+    }
+    blogService.createNewBlog(newBlog)
+  }
+
   if (user === null) {
     return (
       <div>
@@ -65,8 +79,23 @@ const App = () => {
   return (
     <div>
       <button onClick={handleLogOut}>log out</button>
-      <h2>blogs</h2>
       <p>{user.name} logged in</p>
+
+      <h2>Create new</h2>
+      <form onSubmit={handleNewBlog}>
+        <label>Title: </label>
+        <input type="text" value={title} onChange={({ target }) => setTitle(target.value)} ></input>
+        <br/>
+        <label>Author: </label>
+        <input type="text" value={author} onChange={({ target }) => setAuthor(target.value)}></input>
+        <br/>
+        <label>Url: </label>
+        <input type="text" value={url} onChange={({ target }) => setUrl(target.value)}></input>
+        <br/>
+        <button>create</button>
+      </form>
+
+      <h2>blogs</h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} user={user} />
       )}

@@ -21,4 +21,19 @@ const getLoggedUser = async (username, password) => {
   }
 }
 
-export default { getAll, getLoggedUser }
+const createNewBlog = async (blog) => {
+  const loggedUserJSON = window.localStorage.getItem("user")
+  const user = JSON.parse(loggedUserJSON)
+  const token = user.token
+
+  const response = await axios
+    .post(
+      baseUrl, 
+      blog,
+      {headers: {Authorization: `Bearer ${token}`}}
+    )
+
+  return response.data
+}
+
+export default { getAll, getLoggedUser, createNewBlog }

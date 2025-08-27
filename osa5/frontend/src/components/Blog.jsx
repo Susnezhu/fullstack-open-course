@@ -2,7 +2,7 @@ const Blog = ({ blog, user }) => {
   if (blog.user.id === user.id) {
     return (
       <div>
-      {blog.title} {blog.author}
+      {blog.title} - {blog.author}
       </div>
     )
   }
