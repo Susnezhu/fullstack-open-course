@@ -1,22 +1,22 @@
-const Message = ({message}) => {
+const Message = ({messageArray}) => {
 
-  if (message === null) {
+  if (messageArray === null) {
     return null
   }
-
+  
   const messageStyle = {
     background: "lightgray",
     borderRadius: "5px",
-    padding: "10px",
+    padding: "5px",
     margin: "10px",
-    fontSize: "20px",
-    color: message[1],
-    border: `solid 3px ${message[1]}`
+    fontSize: "18px",
+    color: messageArray[1],
+    border: `solid 3px ${messageArray[1]}`
   }
 
   return (
     <div style={messageStyle}>
-      {message[0]}
+      <p>{messageArray[0]}</p>
     </div>
   )
 }

@@ -1,28 +1,31 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef} from 'react'
+
 import Blog from './components/Blog'
+import LoginForm from './components/Login'
+import Togglable from './components/Togglable'
+import CreateNewBlog from './components/NewBlog'
+
 import blogService from './services/blogs'
 import { Message } from './messages'
 
+
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const [blogs, setBlogs] = useState([]) //kaikki blogit
+  
+  const [user, setUser] = useState(null) //kirjautunut käyttäjä (tallentuu myös localStoragen)
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  const [message, setMessage] = useState(null) // viesti
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const formsRef = useRef()
 
-  const [message, setMessage] = useState(null)
-
-
+  // hakee kaikki blogit
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
   }, [])
 
+  // tarkistaa onko käyttäjä kirjautunut
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("user")
       if (loggedUserJSON) {
@@ -37,79 +40,32 @@ const App = () => {
     setMessage(messageObj)
 
     setTimeout(() => {
-      setMessage(null)
-    }, 7000)
+      setMessage(null) // viesti piilottuu
+    }, 5000)
   }
 
-
-  const handleLogin = (event) => {
-    event.preventDefault()
-    console.log('logging in with', username)
-    setUsername('')
-    setPassword('')
-
-    blogService.getLoggedUser(username, password)
-      .then(data => {
-        setUser(data)
-        window.localStorage.setItem('user', JSON.stringify(data))
-      })
-      .catch(error => {
-        console.log('loggin error:', error)
-        showMessage("Wrong password or username", "red")
-      })
-  }
-
+  // poistaa kirjautunut käyttäjä
   const handleLogOut = () => {
     setUser(null) 
     window.localStorage.removeItem('user')
   }
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault()
 
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url
-    }
-    
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-
-    try {
-      const response = await blogService.createNewBlog(newBlog)
-
-      if (response) {
-        showMessage(`A new blog "${title}" by "${author}" added`, "green")
-      }
-
-      blogService.getAll().then(blogs =>
-        setBlogs( blogs )
-      )
-    } catch (error) {
-      console.log("adding new blog error: ", error)
-      showMessage("Error adding new blog", "red")
-    }
-    
-  }
-
-  if (user === null) {
+  if (user === null) { //jos käyttäjä ei ole kirjautunut
     return (
       <div>
-        <h1>Log in to application</h1>
+        <h1>Bloglist</h1>
 
-        <Message message={message}/>
+        <Message messageArray={message}/> {/* käyttää message useState: ['viesti virheestä', 'red'] */}
 
-        <form onSubmit={handleLogin}>
-          <label>Username: </label>
-          <input type="text" value={username} onChange={({ target }) => setUsername(target.value)}></input>
-          <br/>
-          <label>Password: </label>
-          <input type="password" value={password} onChange={({ target }) => setPassword(target.value)}></input>
-          <br/>
-          <button>login</button>
-        </form>
+        <Togglable buttonLabel="log in" formsRef={formsRef}>
+          <LoginForm 
+          setUser={setUser} 
+          user={user}
+          showMessage={showMessage}
+          formsRef={formsRef}
+          />
+        </Togglable>
       </div>
     )
   }
@@ -117,27 +73,22 @@ const App = () => {
   return (
     <div>
       <button onClick={handleLogOut}>log out</button>
+
       <p>{user.name} logged in</p>
 
-      <Message message={message}/>
+      <Message messageArray={message}/>
 
-      <h2>Create new</h2>
-      <form onSubmit={handleNewBlog}>
-        <label>Title: </label>
-        <input type="text" value={title} onChange={({ target }) => setTitle(target.value)} ></input>
-        <br/>
-        <label>Author: </label>
-        <input type="text" value={author} onChange={({ target }) => setAuthor(target.value)}></input>
-        <br/>
-        <label>Url: </label>
-        <input type="text" value={url} onChange={({ target }) => setUrl(target.value)}></input>
-        <br/>
-        <button>create</button>
-      </form>
+      <Togglable buttonLabel="create new blog" formsRef={formsRef}>
+        <CreateNewBlog 
+        showMessage={showMessage}
+        setBlogs={setBlogs} 
+        formsRef={formsRef}
+        />
+      </Togglable>
 
       <h2>blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} user={user} />
+        <Blog key={blog.id} blog={blog} user={user} /> // näyttää vaan kirjautuneen käyttäjän blogit
       )}
     </div>
   )

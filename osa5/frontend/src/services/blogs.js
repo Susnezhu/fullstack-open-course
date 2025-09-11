@@ -22,18 +22,18 @@ const getLoggedUser = async (username, password) => {
 }
 
 const createNewBlog = async (blog) => {
-  const loggedUserJSON = window.localStorage.getItem("user")
-  const user = JSON.parse(loggedUserJSON)
-  const token = user.token
+  const user = JSON.parse(window.localStorage.getItem("user")) // kirjautunut käyttäjä
 
-  const response = await axios
-    .post(
-      baseUrl, 
-      blog,
-      {headers: {Authorization: `Bearer ${token}`}}
-    )
+  if (user) {
+    const response = await axios
+      .post(
+        baseUrl, 
+        blog,
+        {headers: {Authorization: `Bearer ${user.token}`}} //kirjautuneen käyttäjän token
+      )
 
-  return response
+    return response
+  }
 }
 
 export default { getAll, getLoggedUser, createNewBlog }
