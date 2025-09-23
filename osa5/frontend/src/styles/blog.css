@@ -1,0 +1,23 @@
+.blog {
+  padding: 10px;
+  margin: 5px;
+  background: transparent;
+  border-radius: 5px;
+  border: 3px dashed lightgray;
+  box-shadow: 3px 3px 5px #777
+}
+
+.blog:hover {
+  cursor: pointer;
+  border: 3px solid grey;
+}
+
+.choosed {
+  border: 3px solid rgb(0, 0, 0);
+}
+
+.choosed p {
+  margin: 10px;
+  padding: 5px;
+  border-left: 3px solid rgb(160, 160, 160);
+}

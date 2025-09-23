@@ -18,11 +18,15 @@ const App = () => {
 
   const formsRef = useRef()
 
+  const getAllBlogFunc = () => {
+    blogService.getAll().then(blogs =>
+      setBlogs( blogs.sort(function(a, b){return a.likes - b.likes}).reverse() )
+    )
+  }
+
   // hakee kaikki blogit
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    getAllBlogFunc()
   }, [])
 
   // tarkistaa onko käyttäjä kirjautunut
@@ -81,14 +85,19 @@ const App = () => {
       <Togglable buttonLabel="create new blog" formsRef={formsRef}>
         <CreateNewBlog 
         showMessage={showMessage}
-        setBlogs={setBlogs} 
+        getAllBlogFunc={getAllBlogFunc}
         formsRef={formsRef}
         />
       </Togglable>
 
       <h2>blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} user={user} /> // näyttää vaan kirjautuneen käyttäjän blogit
+        <Blog // näyttää vaan kirjautuneen käyttäjän blogit
+          key={blog.id} 
+          blog={blog} 
+          user={user} 
+          showMessage={showMessage} 
+          getAllBlogFunc={getAllBlogFunc}/> 
       )}
     </div>
   )

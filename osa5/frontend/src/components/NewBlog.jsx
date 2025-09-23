@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const CreateNewBlog = ({showMessage, setBlogs, formsRef}) => {
+const CreateNewBlog = ({showMessage, getAllBlogFunc, formsRef}) => {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -30,9 +30,7 @@ const CreateNewBlog = ({showMessage, setBlogs, formsRef}) => {
       }
 
       // Hakee kaikki blogit uudestan
-      blogService.getAll().then(blogs =>
-        setBlogs( blogs )
-      )
+      getAllBlogFunc()
 
     } catch (error) {
       console.log("adding new blog error: ", error)

@@ -36,4 +36,34 @@ const createNewBlog = async (blog) => {
   }
 }
 
-export default { getAll, getLoggedUser, createNewBlog }
+const likeBlog = async (blogId) => {
+
+  const blog = await axios.get(`${baseUrl}/${blogId}`);
+  const newLikeValue = blog.data.likes + 1; // vanha "likes" arvo + 1
+
+  const response = await axios
+    .put(
+      `${baseUrl}/${blogId}`,
+      {"likes": newLikeValue}
+    );
+
+  return (
+    response
+  )
+}
+
+const deleteBlog = async (blogId) => {
+  const user = JSON.parse(window.localStorage.getItem("user"))
+
+  const response = await axios
+    .delete(
+      `${baseUrl}/${blogId}`,
+      {headers: {Authorization: `Bearer ${user.token}`}}
+    )
+
+    return (
+      response
+    )
+}
+
+export default { getAll, getLoggedUser, createNewBlog, likeBlog, deleteBlog }
