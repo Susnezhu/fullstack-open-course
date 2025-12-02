@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef} from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import Blog from './components/Blog'
 import LoginForm from './components/Login'
@@ -11,7 +11,7 @@ import { Message } from './messages'
 
 const App = () => {
   const [blogs, setBlogs] = useState([]) //kaikki blogit
-  
+
   const [user, setUser] = useState(null) //kirjautunut käyttäjä (tallentuu myös localStoragen)
 
   const [message, setMessage] = useState(null) // viesti
@@ -31,11 +31,11 @@ const App = () => {
 
   // tarkistaa onko käyttäjä kirjautunut
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("user")
-      if (loggedUserJSON) {
-        const user = JSON.parse(loggedUserJSON)
-        setUser(user)
-      }
+    const loggedUserJSON = window.localStorage.getItem('user')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+    }
   }, [])
 
   const showMessage = (message, color) => {
@@ -50,7 +50,7 @@ const App = () => {
 
   // poistaa kirjautunut käyttäjä
   const handleLogOut = () => {
-    setUser(null) 
+    setUser(null)
     window.localStorage.removeItem('user')
   }
 
@@ -63,11 +63,11 @@ const App = () => {
         <Message messageArray={message}/> {/* käyttää message useState: ['viesti virheestä', 'red'] */}
 
         <Togglable buttonLabel="log in" formsRef={formsRef}>
-          <LoginForm 
-          setUser={setUser} 
-          user={user}
-          showMessage={showMessage}
-          formsRef={formsRef}
+          <LoginForm
+            setUser={setUser}
+            user={user}
+            showMessage={showMessage}
+            formsRef={formsRef}
           />
         </Togglable>
       </div>
@@ -76,28 +76,28 @@ const App = () => {
 
   return (
     <div>
-      <button onClick={handleLogOut}>log out</button>
+      <button onClick={handleLogOut} id="log-out-btn">log out</button>
 
       <p>{user.name} logged in</p>
 
       <Message messageArray={message}/>
 
       <Togglable buttonLabel="create new blog" formsRef={formsRef}>
-        <CreateNewBlog 
-        showMessage={showMessage}
-        getAllBlogFunc={getAllBlogFunc}
-        formsRef={formsRef}
+        <CreateNewBlog
+          showMessage={showMessage}
+          getAllBlogFunc={getAllBlogFunc}
+          formsRef={formsRef}
         />
       </Togglable>
 
       <h2>blogs</h2>
       {blogs.map(blog =>
-        <Blog // näyttää vaan kirjautuneen käyttäjän blogit
-          key={blog.id} 
-          blog={blog} 
-          user={user} 
-          showMessage={showMessage} 
-          getAllBlogFunc={getAllBlogFunc}/> 
+        <Blog
+          key={blog.id}
+          blog={blog}
+          user={user}
+          showMessage={showMessage}
+          getAllBlogFunc={getAllBlogFunc}/>
       )}
     </div>
   )

@@ -23,6 +23,7 @@ export default [
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
     },
+
     rules: {
       ...js.configs.recommended.rules,
       ...react.configs.recommended.rules,
@@ -45,4 +46,12 @@ export default [
       'no-console': 'off',
     },
   },
+  {
+    files: ['**/*.test.{js,jsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.vitest
+      }
+    }
+  }
 ]

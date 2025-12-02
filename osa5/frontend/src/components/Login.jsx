@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const LoginForm = ({setUser, showMessage, formsRef}) => {
+const LoginForm = ({ setUser, showMessage, formsRef }) => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -20,7 +20,7 @@ const LoginForm = ({setUser, showMessage, formsRef}) => {
       })
       .catch(error => {
         console.log('loggin error:', error)
-        showMessage("Wrong password or username", "red")
+        showMessage('Wrong password or username', 'red')
       })
 
     setUsername('')
@@ -30,14 +30,18 @@ const LoginForm = ({setUser, showMessage, formsRef}) => {
   return (
     <div>
       <form>
-          <label>Username: </label>
+        <label>
+          Username:
           <input type="text" value={username} onChange={(({ target }) => setUsername(target.value))}></input>
-          <br/>
-          <label>Password: </label>
+        </label>
+        <br/>
+        <label>
+          Password:
           <input type="password" value={password} onChange={(({ target }) => setPassword(target.value))}></input>
-          <br/>
-          <button onClick={handleLogin}>login</button>
-        </form>
+        </label>
+        <br/>
+        <button onClick={handleLogin} id="login_submit">login</button>
+      </form>
     </div>
   )
 }

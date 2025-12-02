@@ -1,7 +1,7 @@
 import { useState, useImperativeHandle } from 'react'
 
 
-const Togglable = ({buttonLabel, formsRef, children}) => {
+const Togglable = ({ buttonLabel, formsRef, children }) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }

@@ -54,31 +54,29 @@ const Blog = ({ blog, user, showMessage, getAllBlogFunc }) => {
   const handleRemoveBtnShowing = (blog, user) => {
     if (blog.user.id === user.id) {
       return (
-        <button onClick={() => handleDetele(blog)}>remove</button>
+        <button onClick={() => handleDetele(blog)} id="remove-blog-btn">remove</button>
       )
     }
   }
 
 
-  if (blog.user.id === user.id) {
-    if (blog.title === clickedBlog) {
-      return(
-        <div className="blog choosed" onClick={() => handleBlogClose()}>
-          <p>{blog.title} - {blog.author}</p>
-          <p>url: {blog.url}</p>
-          <p>likes: {blog.likes} <button onClick={() => handleLike(blog)}>send like</button></p>
-          <p>{blog.user.name}</p>
-          {handleRemoveBtnShowing(blog, user)}
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          <button className="blog" onClick={() => handleBlogOpen(blog.title)}> {blog.title} - {blog.author} </button>
-        </div>
-      )
-    }
+  //if (blog.user.id === user.id) { (Jos on tarvetta näyttää pelkästään kirjautuneen käyttäjän blogit)
+  if (blog.title === clickedBlog) {
+    return(
+      <div className="blog choosed" onClick={() => handleBlogClose()}>
+        <p>{blog.title} - {blog.author}</p>
+        <p>url: {blog.url}</p>
+        <p>likes: {blog.likes} <button onClick={() => handleLike(blog)} id="send-like-btn">send like</button></p>
+        <p>{blog.user.name}</p>
+        {handleRemoveBtnShowing(blog, user)}
+      </div>
+    )
+  } else {
+    return (
+      <div className="blog" onClick={() => handleBlogOpen(blog.title)}> {blog.title} - {blog.author}</div>
+    )
   }
+  //}
 }
 
 
