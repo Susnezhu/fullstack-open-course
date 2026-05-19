@@ -3,6 +3,8 @@ import { useMutation } from '@apollo/client/react'
 import { CREATE_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../../queries'
 
 const NewBook = (props) => {
+  const [failMessage, setFailMessage] = useState('')
+
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
@@ -16,6 +18,7 @@ const NewBook = (props) => {
     ],
   })
 
+
   if (!props.show) {
     return null
   }
@@ -25,7 +28,16 @@ const NewBook = (props) => {
 
     console.log('add book...')
 
-    createBook({ variables: { title, published, author, genres } })
+    try {
+      await createBook({ variables: { title, published, author, genres } })
+    } catch (error) {
+      console.log(error)
+      setFailMessage(error.message)
+
+      setTimeout(() =>{
+        setFailMessage('')
+      },3000)
+    }
 
     setTitle('')
     setPublished('')
@@ -76,6 +88,10 @@ const NewBook = (props) => {
         <div>genres: {genres.join(' ')}</div>
         <button type="submit">create book</button>
       </form>
+
+      <div>
+        <p style={{color: "red"}}>{failMessage}</p>
+      </div>
     </div>
   )
 }
