@@ -3,8 +3,6 @@ import { useMutation } from '@apollo/client/react'
 import { CREATE_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../../queries'
 
 const NewBook = (props) => {
-  const [failMessage, setFailMessage] = useState('')
-
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
@@ -14,7 +12,12 @@ const NewBook = (props) => {
   const [createBook] = useMutation(CREATE_BOOK, {
     refetchQueries: [
       { query: ALL_AUTHORS },
-      { query:  ALL_BOOKS }
+      {
+        query: ALL_BOOKS,
+        variables: {
+          genre
+        }
+      }
     ],
   })
 
@@ -29,14 +32,19 @@ const NewBook = (props) => {
     console.log('add book...')
 
     try {
-      await createBook({ variables: { title, published, author, genres } })
+      await createBook({ 
+        variables: { title, published, author, genres }, 
+        context: {
+          headers: {
+          authorization: `Bearer ${props.token}`,
+          },
+        },
+      })
+      props.setPage('books')
+      props.client.resetStore()
     } catch (error) {
       console.log(error)
-      setFailMessage(error.message)
-
-      setTimeout(() =>{
-        setFailMessage('')
-      },3000)
+      props.handleFail(error.message)
     }
 
     setTitle('')
@@ -55,29 +63,34 @@ const NewBook = (props) => {
     <div>
       <form onSubmit={submit}>
         <div>
-          title
+          <label htmlFor="title">title</label>
           <input
             value={title}
+            id="title"
             onChange={({ target }) => setTitle(target.value)}
           />
         </div>
         <div>
-          author
+          <label htmlFor="author">author</label>
           <input
             value={author}
+            id="author"
             onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
-          published
+          <label htmlFor="published">published</label>
           <input
             type="number"
+            id="published"
             value={published}
             onChange={({ target }) => setPublished(Number(target.value))}
           />
         </div>
         <div>
+          <label htmlFor="genres"></label>
           <input
+            id="genres"
             value={genre}
             onChange={({ target }) => setGenre(target.value)}
           />
@@ -88,10 +101,6 @@ const NewBook = (props) => {
         <div>genres: {genres.join(' ')}</div>
         <button type="submit">create book</button>
       </form>
-
-      <div>
-        <p style={{color: "red"}}>{failMessage}</p>
-      </div>
     </div>
   )
 }

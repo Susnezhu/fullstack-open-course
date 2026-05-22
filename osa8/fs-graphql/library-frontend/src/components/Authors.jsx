@@ -24,14 +24,26 @@ const Authors = (props) => {
     return <p>loading...</p>
   }
 
-  const submitChanges = (event) => {
+  const submitChanges = async (event) => {
     event.preventDefault()
 
     if (!selected) {
       return null
     }
 
-    editAuthor({ variables: { name: selected, setBornTo: Number(birthYear) } })
+    try {
+      await editAuthor({ 
+        variables: { name: selected, setBornTo: Number(birthYear) },
+        context: {
+          headers: {
+            authorization: `Bearer ${props.token}`
+          }
+        }
+      })
+    } catch (error) {
+      console.log(error)
+      props.handleFail(error.message)
+    }
 
     console.log('changes submitted', selected)
   }
@@ -48,7 +60,11 @@ const Authors = (props) => {
           </tr>
           {authors.data.allAuthors.map((a) => (
             <tr key={a.id}>
-              <td><button onClick={() => setSelected(a.name)}>select</button>{a.name}</td>
+              {props.token ? (
+                <td><button onClick={() => setSelected(a.name)}>select</button>{a.name}</td>
+              ) : (
+                <td>{a.name}</td>
+              )}
               <td>{a.born}</td>
               <td>{a.bookCount}</td>
             </tr>
@@ -56,42 +72,46 @@ const Authors = (props) => {
         </tbody>
       </table>
 
-      <div> {/* Maybe later I will add "hide and show" button*/}
-        <h3>Change author</h3>
+      {props.token ? (
+      <div>
+        <h3>Set birthyear</h3>
 
-        <label>
-          Selected author:
+        <div>
           <select 
-            name="selectedAuthor" 
+            name="name" 
             value={selected}
             onChange={e => setSelected(e.target.value)}
           >
-          <option disabled value="">
+          <option disabled value="" key={"disabled"}>
             Select author
           </option>
 
           {authors.data.allAuthors.map((a) => (
-              <option value={a.name}>{a.name}</option>
+              <option value={a.name} key={a.id}>{a.name}</option>
           ))}
           </select>
-        </label>
+        </div>
 
 
         
 
         <form onSubmit={submitChanges}>
           <div>
-            born
+            <label htmlFor="born">born</label>
             <input
+              id="born"
               type="number"
               value={birthYear}
               onChange={({ target }) => setBirthYear(target.value)}
             />
           </div>
           
-          <button type="submit">Change author</button>
+          <button type="submit">update author</button>
         </form>
       </div>
+      ): (
+        <p>Log in to be able make changes</p>
+      )}
     </div>
   )
 }

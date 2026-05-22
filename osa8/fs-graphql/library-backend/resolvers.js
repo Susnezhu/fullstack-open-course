@@ -132,7 +132,7 @@ const resolvers = {
       const user = await User.findOne({ username: args.username })
 
       if ( !user || args.password !== 'secret' ) {
-        throw new GraphQLError('wrong credentials', {
+        throw new GraphQLError('Login failed', {
           extensions: {
             code: 'BAD_USER_INPUT'
           }
@@ -203,13 +203,13 @@ const recreateDatabase = async () => {
     genres: ['fantasy']
   })
 
-  const user = new User({ username: 'Admin'})
+  const user = new User({ username: 'Admin', favoriteGenre: 'fantasy'})
 
   await user.save()
 
   console.log('database recreated')
 }
 
-// recreateDatabase()
+recreateDatabase()
 
 module.exports = resolvers
