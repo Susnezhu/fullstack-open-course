@@ -149,7 +149,11 @@ describe('Library app', () => {
       await page.getByRole('button', { name: 'books' }).click()
       await page.getByRole('button', { name: 'classic' }).click()
 
-      await expect(page.getByText('Classic Test Book')).toBeVisible()
+      const book = page.getByText('Classic Test Book')
+
+      await expect(book).toBeVisible()
+      await expect(book).toBeAttached()
+      
       await expect(page.getByText('Crime and punishment')).toBeVisible()
     })
   })

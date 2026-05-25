@@ -12,6 +12,8 @@ const Login = (props) => {
       const token = data.login.value
       props.setToken(token)
       localStorage.setItem('phonebook-user-token', token)
+      props.setPage('authors')
+      props.client.resetStore()
     }
   })
 
@@ -24,8 +26,6 @@ const Login = (props) => {
 
     try {
       await login({ variables: { username, password } })
-      props.setPage('authors')
-      props.client.resetStore()
     } catch (error) {
       console.log(error)
       props.handleFail(error.message)

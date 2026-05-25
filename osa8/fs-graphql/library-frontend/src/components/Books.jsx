@@ -20,8 +20,6 @@ const Books = (props) => {
 
   const allGenres = [...new Set(books.data.all.map(book => book.genres).flat()) ]
 
-  const list = genre ? books.data.filtered : books.data.all
-
   return (
     <div>
       <h2>books</h2>
@@ -35,7 +33,7 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {list.map((b) => (
+          {(genre ? books.data.filtered : books.data.all)?.map((b) => (
             <tr key={b.id}>
               <td>{b.title}</td>
               <td>{b.author.name}</td>

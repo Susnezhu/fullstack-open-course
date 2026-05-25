@@ -210,6 +210,6 @@ const recreateDatabase = async () => {
   console.log('database recreated')
 }
 
-recreateDatabase()
+// recreateDatabase()
 
 module.exports = resolvers
