@@ -2,12 +2,14 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken')
 const { GraphQLError } = require('graphql')
 const { v1: uuid } = require('uuid')
+const { PubSub } = require('graphql-subscriptions')
 
 
 const Author = require('./models/author')
 const Book = require('./models/book')
 const User = require('./models/user')
 
+const pubsub = new PubSub()
 
 const resolvers = {
   Query: {
@@ -80,7 +82,7 @@ const resolvers = {
       })
 
       try {
-        return await book.save()
+        await book.save()
       } catch (error) {
         throw new GraphQLError(`Saving book failed: ${error.message}`, {
           extensions: {
@@ -91,6 +93,9 @@ const resolvers = {
         })
       }
 
+      pubsub.publish('BOOK_ADDED', { bookAdded: book })
+
+      return book
     },
     editAuthor: async (root, args, context) => {
       const currentUser = context.currentUser
@@ -155,7 +160,12 @@ const resolvers = {
       await User.deleteMany({})
       return true
     }
-  }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterableIterator('BOOK_ADDED')
+    },
+  },
 }
 
 
