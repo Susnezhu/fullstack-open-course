@@ -18,7 +18,7 @@ jobs:
         node-version: '24'
     
     - name: Install healthapp dependencies
-      working-directory: osa9/fs-typescript//healthapp
+      working-directory: osa9/fs-typescript/healthapp
       run: npm install
     
     - name: Lint healthapp
