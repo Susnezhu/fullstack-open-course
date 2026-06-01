@@ -15,7 +15,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v5
       with:
-        node-version: '24'
+        node-version: '22'
     
     - name: Install healthapp dependencies
       working-directory: osa9/fs-typescript/healthapp
@@ -30,7 +30,7 @@ jobs:
       run: |
         npm start &
         echo $! > server.pid
-        sleep 3
+      # sleep 3
     
     - name: Install test dependencies
       working-directory: osa9/fs-typescript/healthapp-tests
@@ -38,7 +38,7 @@ jobs:
     
     - name: Install Playwright browsers
       working-directory: osa9/fs-typescript/healthapp-tests
-      run: npx playwright install --with-deps chromium
+      run: npx playwright install chromium
     
     - name: Run e2e tests
       working-directory: osa9/fs-typescript/healthapp-tests
