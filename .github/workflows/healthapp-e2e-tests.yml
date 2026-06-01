@@ -19,7 +19,7 @@ jobs:
     
     - name: Install healthapp dependencies
       working-directory: osa9/fs-typescript/healthapp
-      run: npm install
+      run: npm install --legacy-peer-deps
     
     - name: Lint healthapp
       working-directory: osa9/fs-typescript/healthapp
@@ -34,11 +34,11 @@ jobs:
     
     - name: Install test dependencies
       working-directory: osa9/fs-typescript/healthapp-tests
-      run: npm install
+      run: npm install --legacy-peer-deps
     
     - name: Install Playwright browsers
       working-directory: osa9/fs-typescript/healthapp-tests
-      run: npx playwright install chromium
+      run: npx playwright install --with-deps chromium
     
     - name: Run e2e tests
       working-directory: osa9/fs-typescript/healthapp-tests
