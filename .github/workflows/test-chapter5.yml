@@ -16,23 +16,23 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 22
 
       - name: Install library-backend dependencies
         working-directory: osa8/fs-graphql/library-backend
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Install library-frontend dependencies
         working-directory: osa8/fs-graphql/library-frontend
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Install E2E test dependencies
         working-directory: osa8/fs-graphql/tests-chapter5
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Install Playwright browsers
         working-directory: osa8/fs-graphql/tests-chapter5
-        run: npx playwright install chromium --with-deps
+        run: npx playwright install chromium
 
       - name: Run E2E tests
         working-directory: osa8/fs-graphql/tests-chapter5
