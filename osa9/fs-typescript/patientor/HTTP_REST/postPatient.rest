@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/patients
+Content-Type: application/json
+
+{
+  "name": "Melissa Karvin",
+  "dateOfBirth": "1999-07-12",
+  "ssn": "120799-268J",
+  "gender": "female",
+  "occupation": "farmer"
+}
