@@ -43,7 +43,7 @@ jobs:
 
     - name: Install Playwright browsers
       working-directory: osa9/fs-typescript/patientor-tests
-      run: npx playwright install --with-deps chromium
+      run: npx playwright install
 
     - name: Wait for servers to start
       run: npx wait-on http://localhost:3001/api/ping http://localhost:5173 --timeout 60000
