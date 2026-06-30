@@ -15,7 +15,7 @@ import HospitalTypeField from './DifferentTypeFields/HospitalTypeField';
 import OccupationalHealthcareTypeField from './DifferentTypeFields/OccupationalHealthcareTypeField';
 
 
-const AddNewEntryForm = ({personId}: {personId: string}) => {
+const AddNewEntryForm = ({personId, toggleFormOpen}: {personId: string, toggleFormOpen: VoidFunction}) => {
   const [errorMessage, setErrorMessage] = useState<string[]>([]);
   
   const [description, setDescription] = useState('');
@@ -48,6 +48,7 @@ const AddNewEntryForm = ({personId}: {personId: string}) => {
     setEmployerName('');
     setSickLeaveStart('');
     setSickLeaveEnd('');
+    toggleFormOpen();
   };
 
   const onTypeChange = (event: SelectChangeEvent<string>) => {
@@ -118,7 +119,8 @@ const AddNewEntryForm = ({personId}: {personId: string}) => {
 
     try {
       const addedEntry = await patientService.newEntry(newEntry, id);
-
+      toggleFormOpen();
+      
       return addedEntry;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -157,9 +159,10 @@ const AddNewEntryForm = ({personId}: {personId: string}) => {
           onChange={({ target }) => setDescription(target.value)}
         />
 
-        <InputLabel sx={{ marginTop: 2.5 }}>date</InputLabel>
+        <InputLabel sx={{ marginTop: 2.5 }} htmlFor="date">date</InputLabel>
         <TextField
           fullWidth 
+          id='date'
           type='date'
           value={date}
           onChange={({ target }) => setDate(target.value)}
@@ -218,7 +221,7 @@ const AddNewEntryForm = ({personId}: {personId: string}) => {
           />
         }
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Add</Button>
         <Button onClick={() => cleanAllFields()}>Cancel</Button>
       </form>
     </div>

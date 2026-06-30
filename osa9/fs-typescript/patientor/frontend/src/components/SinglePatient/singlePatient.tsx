@@ -64,7 +64,7 @@ const SinglePatient = () => {
     <h2>Entries</h2>
     <Button variant="contained" onClick={() => toggleFormOpen()}>{entryFormSetting ? 'Close form' : 'Add new entry'}</Button>
     { entryFormSetting ? 
-      <AddNewEntryForm personId={patient.id}/> :
+      <AddNewEntryForm personId={patient.id} toggleFormOpen={toggleFormOpen}/> :
       ''
     }
 

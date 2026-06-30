@@ -12,9 +12,10 @@ const HospitalTypeField = ({dischargeDate, setDischargeDate, dischargeCriteria, 
 
   return (
     <div style={{marginTop: '10px'}}>
-      <InputLabel sx={{ marginTop: 2.5 }}>discharge date</InputLabel>
+      <InputLabel sx={{ marginTop: 2.5 }} htmlFor="dischargeDate">discharge date</InputLabel>
       <TextField
         type='date'
+        id='dischargeDate'
         fullWidth 
         value={dischargeDate}
         onChange={({ target }) => setDischargeDate(target.value)}

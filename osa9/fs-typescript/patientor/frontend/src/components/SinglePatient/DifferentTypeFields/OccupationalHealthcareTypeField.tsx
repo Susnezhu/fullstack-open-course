@@ -23,17 +23,19 @@ const OccupationalHealthcareTypeField = ({employerName, setEmployerName, sickLea
     />
 
     <p>sickleave:</p>
-    <InputLabel sx={{ marginTop: 2.5 }}>start date</InputLabel>
+    <InputLabel sx={{ marginTop: 2.5 }} htmlFor="startDate">start date</InputLabel>
     <TextField
       fullWidth
+      id='startDate'
       type='date'
       value={sickLeaveStart}
       onChange={({ target }) => setSickLeaveStart(target.value)}
     />
 
-    <InputLabel sx={{ marginTop: 2.5 }}>end date</InputLabel>
+    <InputLabel sx={{ marginTop: 2.5 }} htmlFor="endDate">end date</InputLabel>
     <TextField
       fullWidth 
+      id='endDate'
       type='date'
       value={sickLeaveEnd}
       onChange={({ target }) => setSickLeaveEnd(target.value)}
