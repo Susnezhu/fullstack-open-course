@@ -10,6 +10,53 @@ export enum Gender {
   Other = "other"
 }
 
+// Entry
+interface BaseEntry {
+  id: string;
+  description: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: Array<Diagnosis['code']>;
+}
+
+export const HealthCheckRating = {
+  Healthy: 0,
+  LowRisk: 1,
+  HighRisk: 2,
+  CriticalRisk: 3,
+} as const;
+
+export type HealthCheckRating = typeof HealthCheckRating[keyof typeof HealthCheckRating];
+
+interface HealthCheckEntry extends BaseEntry {
+  type: "HealthCheck";
+  healthCheckRating: HealthCheckRating;
+}
+
+export type Discharge = {
+  date: string,
+  criteria: string,
+};
+
+interface HospitalEntry extends BaseEntry{
+  type: 'Hospital',
+  discharge: Discharge,
+}
+
+type sickLeave = {
+  startDate: string,
+  endDate: string
+};
+
+interface OccupationalHealthcareEntry extends BaseEntry {
+  type: 'OccupationalHealthcare',
+  employerName: string,
+  sickLeave?: sickLeave,
+}
+
+export type Entry = HospitalEntry | OccupationalHealthcareEntry | HealthCheckEntry;
+
+// patient
 export interface Patient {
   id: string;
   name: string;
@@ -17,6 +64,11 @@ export interface Patient {
   gender: Gender;
   ssn?: string;
   dateOfBirth?: string;
+  entries: Entry[]
 }
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
+
+export type NewEntryValuest = Omit<HospitalEntry, 'id'> | Omit<OccupationalHealthcareEntry, 'id'> | Omit<HealthCheckEntry, 'id'>;
+
+export type NewEntryFormValues = Omit<BaseEntry, 'id' | 'type'>;
