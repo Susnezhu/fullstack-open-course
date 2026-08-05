@@ -1,14 +1,17 @@
-import { Text as NativeText, StyleSheet, Pressable, TextInput, Platform } from 'react-native';
+import { Text as NativeText, StyleSheet, Pressable, TextInput, Platform, View } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Link as NativeLink } from 'react-router-native';
+import { openURL } from 'expo-linking';
+import { useState } from 'react';
 
-import theme from '../theme';
+import {theme, defaultElements} from '../theme';
 
 const UserDeviceSettings = () => {
   if (Platform.OS === 'android') {
     return theme.fontFamily.android
   }
 
-  if (Platform.OS === 'android') {
+  if (Platform.OS === 'ios') {
     return theme.fontFamily.ios
   }
 
@@ -16,48 +19,11 @@ const UserDeviceSettings = () => {
 }
 
 const styles = StyleSheet.create({
-  text: {
-    color: theme.colors.text,
-    fontWeight: theme.fontWeights.normal,
-    margin: 5,
-    fontSize: theme.fontSize.normal
-  },
-  fontWeightBold: {
-    fontWeight: theme.fontWeights.bold,
-  },
-  button: {
-    backgroundColor: theme.colors.button,
-    alignSelf: 'flex-start',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 10,
-    color: '#E5F9E0',
-    fontWeight: 'bold',
-    fontSize: theme.fontSize.normal,
-  },
-  link: {
-    color: theme.colors.link,
-    fontWeight: theme.fontWeights.normal,
-    margin: 5,
-    fontSize: theme.fontSize.normal
-  },
-  input: {
-    backgroundColor: theme.colors.basicColor,
-    padding: 12,
-    fontSize: theme.fontSize.normal,
-    margin: 10,
-    borderColor: theme.colors.button,
-    borderWidth: 2,
-    borderRadius: 10,
-  },
-  wideElement: {
-    width: '80%',
-    alignSelf: 'center',
-    marginTop: 20,
-    marginBottom: 20,
-    textAlign: 'center',
-    paddingVertical: 8,
-  },
+  text: defaultElements.text.default,
+  button: defaultElements.button.default,
+  link: defaultElements.link.default,
+  input:defaultElements.input.default,
+
   fontFamily: {
     fontFamily: UserDeviceSettings(),
   }
@@ -65,67 +31,118 @@ const styles = StyleSheet.create({
 
 
 // Elements
-export const Text = ({ fontWeight, style, ...props }) => {
+export const Text = ({ type='default', testID, style, ...props }) => {
   const textStyle = [
     styles.text,
     styles.fontFamily,
-    fontWeight === 'bold' && styles.fontWeightBold,
+    type === 'header' && defaultElements.text.header,
     style,
   ];
 
-  return <NativeText style={textStyle} {...props} />;
+  return <NativeText style={textStyle} {...props} testID={testID}/>;
 };
 
-export const Button = ({ onClick, width, style, ...props }) => {
+export const Button = ({ testID, onClick, type, style, ...props }) => {
   const buttonStyle = [
     styles.button,
     styles.fontFamily,
-    width === 'wide' && styles.wideElement,
+    type === 'wide' && defaultElements.button.wide,
     style,
   ];
 
   return (
-    <Pressable onPress={onClick}>
+    <Pressable onPress={onClick} testID={testID}>
       <NativeText style={buttonStyle} {...props} />
     </Pressable>
   )
   
 };
 
-export const Link = ({ to='/', style, ...props }) => {
+export const Link = ({ type='default', darkColor=false, testID, to='/', style, ...props }) => {
   const linkStyle = [
     styles.link,
     styles.fontFamily,
+    darkColor && {color: theme.colors.link.dark},
+    type === 'withBackground' && defaultElements.link.withBackground,
     style,
   ];
 
 
   return (
-    <NativeLink to={to}>
+    <NativeLink to={to} testID={testID}>
       <NativeText style={linkStyle} {...props} />
     </NativeLink>
   )
 };
 
 
-export const Input = ({style, id, name, type, onChangeText, value, secret=false, onBlur=false, ...props}) => {
+export const Input = (
+  {
+    keyboardType='default', 
+    testID, 
+    style,
+    name,
+    onChangeText, 
+    value, 
+    secret=false, 
+    onBlur=false, 
+    ...props
+  }) => {
+
   const inputStyle = [
     styles.input,
     styles.fontFamily,
+    {
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
     style,
   ]
 
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <TextInput style={inputStyle}
-      id={id}
-      name={name}
-      type={type}
-      onChangeText={onChangeText}
-      value={value}
-      secureTextEntry={secret}
-      placeholder={name}
-      onBlur={onBlur}
-      {...props}
-    />
+    <View style={inputStyle}>
+      <TextInput
+        onChangeText={onChangeText}
+        value={value}
+        secureTextEntry={secret && !showPassword}
+        placeholder={name}
+        onBlur={onBlur}
+        keyboardType={keyboardType}
+        testID={testID}
+        {...props}
+      />
+
+      {secret && (
+        <Pressable
+          onPress={() => setShowPassword(!showPassword)}
+          style={styles.eyeButton}
+        >
+          <MaterialCommunityIcons
+            name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+            size={24}
+          />
+        </Pressable>
+      )}
+    </View>
   )
 }
+
+export const BrowserLink = ({ testID, url='', style, ...props }) => {
+  const linkStyle = [
+    styles.link,
+    styles.fontFamily,
+    style,
+  ];
+
+  const openBrowserLink = (url) => {
+    openURL(url)
+  }
+
+  return (
+    <Pressable onPress={() => openBrowserLink(url)} testID={testID}>
+      <NativeText style={linkStyle} {...props} />
+    </Pressable>
+  )
+};
